@@ -41,6 +41,7 @@ def q2():
             #line = line.strip()
             #print(line)
 
+            #print(utils.parse_d2_game(line))
             _, games = utils.parse_d2_game(line)
 
             min_r = 0
@@ -52,14 +53,11 @@ def q2():
                     colour, value = utils.get_colour_and_value(pick)
                     match colour:
                         case 'red':
-                            if value > min_r:
-                                min_r = value
+                            min_r = max(value, min_r)
                         case 'green':
-                            if value > min_g:
-                                min_g = value
+                            min_g = max(value, min_g)
                         case 'blue':
-                            if value > min_b:
-                                min_b = value
+                            min_b = max(value, min_b)
                         case _:
                             raise("Unrecognised colour")
             #print(min_r, min_g, min_b)

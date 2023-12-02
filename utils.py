@@ -14,7 +14,7 @@ string_to_intstring = {
 master_string_list = list(string_to_intstring.keys()) + list(string_to_intstring.values())
 
 def strip_non_numeric(s) -> str:
-    return re.sub("[^$0-9.]", "", s)
+    return ''.join([i for i in s if i.isdigit()])
 def strip_non_alpha(s) -> str:
     return ''.join([i for i in s if i.isalpha()])
 
@@ -41,6 +41,10 @@ def get_first_and_last_int_occurrence(s) -> (str, str):
     return min_value, max_value
 
 def parse_d2_game(line) -> (int, list):
+    """
+    input: "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red"
+    output: (4, [[' 1 green', ' 3 red', ' 6 blue'], [' 3 green', ' 6 red'], [' 3 green', ' 15 blue', ' 14 red\n']])
+    """
     gameid_string, contents = line.split(":")
     gameid = int(strip_non_numeric(gameid_string))
     games = [x.split(",") for x in contents.split(";")]
@@ -48,7 +52,8 @@ def parse_d2_game(line) -> (int, list):
 
 def get_colour_and_value(s) -> (str, int):
     """
-    Example input string: "12 green"
+    input: "12 green"
+    output: ("green", 12)
     """
     colour = strip_non_alpha(s)
     value = int(strip_non_numeric(s))
