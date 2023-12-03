@@ -9,9 +9,8 @@ string_to_intstring = {
     "eight" : "8",
     "nine" : "9",
 }
-master_string_list = list(string_to_intstring.keys()) + list(string_to_intstring.values())
 
-def get_first_and_last_occurrence(s: str, things_to_find: list) -> (str, str):
+def get_first_and_last_occurrence_of_thing(s: str, things_to_find: list) -> (str, str):
     min_index = len(s)
     max_index = -1
     min_value = -1
@@ -36,13 +35,13 @@ def get_first_and_last_occurrence(s: str, things_to_find: list) -> (str, str):
 total_p1 = 0
 total_p2 = 0
 with open("input/01/real.txt") as f:
+    p1_things_to_find = list(string_to_intstring.values())
+    p2_things_to_find = list(string_to_intstring.keys()) + list(string_to_intstring.values())
     for line in f:
         line = line.strip()
-        first_and_last_p1 = get_first_and_last_occurrence(line, list(string_to_intstring.values()))
-        first_and_last_p2 = get_first_and_last_occurrence(line, list(string_to_intstring.keys()) + list(string_to_intstring.values()))
-        calibration_p1 = int("{}{}".format(*first_and_last_p1))
-        calibration_p2 = int("{}{}".format(*first_and_last_p2))
-        total_p1 += calibration_p1
-        total_p2 += calibration_p2
+        first_and_last_p1 = get_first_and_last_occurrence_of_thing(line, p1_things_to_find)
+        first_and_last_p2 = get_first_and_last_occurrence_of_thing(line, p2_things_to_find)
+        total_p1 += int("{}{}".format(*first_and_last_p1))
+        total_p2 += int("{}{}".format(*first_and_last_p2))
 print(total_p1)
 print(total_p2)
