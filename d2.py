@@ -4,8 +4,8 @@ def q1():
     with open("input/02/real.txt") as f:
         total = 0
         for line in f:
-            line = line.strip()
-            print(line)
+            #line = line.strip()
+            #print(line)
             gameid, games = utils.parse_d2_game(line)
             MAX_R = 12
             MAX_G = 13
@@ -26,13 +26,13 @@ def q1():
                             b += value
                         case _:
                             raise("Unrecognised colour")
-                print(r, g, b)
+                #print(r, g, b)
                 if r > MAX_R or g > MAX_G or b > MAX_B:
                     valid = False
                     break
             if valid:
                 total += gameid
-            print(total)
+        return total
 
 def q2():
     with open("input/02/real.txt") as f:
@@ -64,6 +64,7 @@ def q2():
             power = min_r * min_g * min_b
             #print(power)
             power_sum += power
-        print(power_sum)
+        return power_sum
 
-q2()
+print(q1())
+print(q2())

@@ -59,3 +59,13 @@ def get_colour_and_value(s) -> (str, int):
     value = int(strip_non_numeric(s))
     return colour, value
 
+def is_symbol_d3(s: str) -> bool:
+    if s.isdigit(): return False
+    if s == '.': return False
+    return True
+
+def dict_increment(d: dict, k, inc=1):
+    if k in d:
+        d[k] += inc
+    else:
+        d[k] = inc
