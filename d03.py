@@ -1,5 +1,6 @@
 import utils
 import re
+from math import prod
 
 def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
     """
@@ -8,12 +9,12 @@ def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
     # boundary checks
     min_x = max(x - 1, 0)
     min_y = max(y - 1, 0)
-    max_x = min(x + 1, len(grid[0]) - 1)
-    max_y = min(y + 1, len(grid) - 1)
+    max_x = min(x + 1, len(grid[0]) - 1) + 1
+    max_y = min(y + 1, len(grid) - 1) + 1
 
-    for x_check in range(min_x, max_x + 1):
-        for y_check in range(min_y, max_y + 1):
-            #print("[{}, {}]: {}".format(x_check, y_check, grid[y_check][x_check]))
+    for x_check in range(min_x, max_x):
+        for y_check in range(min_y, max_y):
+            if x_check == y_check: continue
             neighbour = grid[y_check][x_check]
             if neighbour == '*':
                 utils.dict_increment(stars, (x_check, y_check), [value])
@@ -24,23 +25,20 @@ def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
 grid = []
 stars = {}
 total_p1 = 0
+total_p2 = 0
+
 with open("input/03/real.txt") as f:
     grid = [line.strip() for line in f]
 
 for y, line in enumerate(grid):
     matches = re.finditer(r'\d+', line)
     for match in matches:
-        span = match.span()
         value = int(match.group())
-        valid = False
-        for x in range(span[0], span[1]):
-            valid = check_neighbours(grid, x, y, value)
-            if valid: break
-        if valid:
-            total_p1 += value
+        for x in range(*match.span()):
+            if check_neighbours(grid, x, y, value):
+                total_p1 += value
+                break
 
-total_p2 = 0
-from math import prod
 for gear_ratio_list in stars.values():
     if len(gear_ratio_list) == 2:
         total_p2 += prod(gear_ratio_list)
