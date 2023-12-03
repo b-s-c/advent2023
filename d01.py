@@ -10,16 +10,16 @@ string_to_intstring = {
     "nine" : "9",
 }
 
-def get_first_and_last_occurrence_of_thing(s: str, things_to_find: list) -> (str, str):
+def get_first_and_last_values(s: str, things_to_find: list) -> (str, str):
     min_index = len(s)
     max_index = -1
     min_value = -1
     max_value = -1
     for search_value in things_to_find:
         low_index = s.find(search_value)
-        high_index = s.rfind(search_value)
-        if low_index == -1 or high_index == -1: # shouldn't actually ever hit the second clause
+        if low_index == -1: # not found
             continue
+        high_index = s.rfind(search_value)
         if low_index < min_index:
             min_index = low_index
             min_value = search_value
@@ -34,13 +34,13 @@ def get_first_and_last_occurrence_of_thing(s: str, things_to_find: list) -> (str
 
 total_p1 = 0
 total_p2 = 0
+p1_things_to_find = list(string_to_intstring.values())
+p2_things_to_find = p1_things_to_find + list(string_to_intstring.keys())
 with open("input/01/real.txt") as f:
-    p1_things_to_find = list(string_to_intstring.values())
-    p2_things_to_find = list(string_to_intstring.keys()) + list(string_to_intstring.values())
     for line in f:
         line = line.strip()
-        first_and_last_p1 = get_first_and_last_occurrence_of_thing(line, p1_things_to_find)
-        first_and_last_p2 = get_first_and_last_occurrence_of_thing(line, p2_things_to_find)
+        first_and_last_p1 = get_first_and_last_values(line, p1_things_to_find)
+        first_and_last_p2 = get_first_and_last_values(line, p2_things_to_find)
         total_p1 += int("{}{}".format(*first_and_last_p1))
         total_p2 += int("{}{}".format(*first_and_last_p2))
 print(total_p1)
