@@ -46,5 +46,3 @@ with open("input/01/real.txt") as f:
         total_p2 += calibration_p2
 print(total_p1)
 print(total_p2)
-
-
