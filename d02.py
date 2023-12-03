@@ -19,22 +19,18 @@ def get_colour_and_value(s) -> (str, int):
     value = int(utils.strip_non_numeric(s))
     return colour, value
 
+MAX_R = 12
+MAX_G = 13
+MAX_B = 14
 with open("input/02/real.txt") as f:
     total = 0 # pt.1 answer
     power_sum = 0 # pt.2 answer
     for line in f:
         gameid, games = parse_d2_game(line)
-
         min_r = 0
         min_g = 0
         min_b = 0
-
-        MAX_R = 12
-        MAX_G = 13
-        MAX_B = 14
-
         valid = True
-
         for game in games:
             r = 0
             g = 0
