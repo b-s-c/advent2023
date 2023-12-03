@@ -1,5 +1,3 @@
-import re
-
 def strip_non_numeric(s) -> str:
     return ''.join([i for i in s if i.isdigit()])
 def strip_non_alpha(s) -> str:
