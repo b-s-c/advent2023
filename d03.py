@@ -28,7 +28,6 @@ grid_width = len(grid[0]) # assuming grid is perfectly rectangular
 for y, line in enumerate(grid):
     matches = re.finditer(r'\d+', line)
     for match in matches:
-        considered_for_p1 = False
         value = int(match.group())
         x1, x2 = match.span()
         results = set()
