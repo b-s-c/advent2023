@@ -2,43 +2,46 @@ import utils
 import re
 from math import prod
 
-def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
+def check_neighbour(grid:list[str], x:int, y:int, value:int) -> bool:
     """
     see if a neighbour is a symbol we're looking for
     """
-    # boundary checks
-    min_x = max(x - 1, 0)
-    min_y = max(y - 1, 0)
-    max_x = min(x + 1, len(grid[0]) - 1) + 1
-    max_y = min(y + 1, len(grid) - 1) + 1
-
-    for x_check in range(min_x, max_x):
-        for y_check in range(min_y, max_y):
-            if x_check == x and y_check == y: continue
-            neighbour = grid[y_check][x_check]
-            if neighbour == '*':
-                utils.dict_increment(stars, (x_check, y_check), [value])
-            if neighbour != '.' and not neighbour.isdigit():
-                return True # strictly speaking, probably should not return early here and continue to look for '*'. but it worked regardless for the AoC input because any given number borders only one symbol at most
-    return False
+    if x < 0 or x >= grid_width or y < 0 or y >= grid_height:
+        return False
+    neighbour = grid[y][x]
+    if neighbour == '*':
+        utils.dict_increment(stars, (x, y), [value])
+        return True
+    if neighbour != '.' and not neighbour.isdigit():
+        return True
 
 grid = []
 stars = {}
 total_p1 = 0
 total_p2 = 0
 
-with open("input/03/real.txt") as f:
+with open("input/03/big.txt") as f:
     grid = [line.strip() for line in f]
+grid_height = len(grid)
+grid_width = len(grid[0]) # assuming grid is perfectly rectangular
 
 for y, line in enumerate(grid):
     matches = re.finditer(r'\d+', line)
     for match in matches:
+        considered_for_p1 = False
         value = int(match.group())
-        for x in range(*match.span()):
-            if check_neighbours(grid, x, y, value):
-                total_p1 += value
-                break
+        x1, x2 = match.span()
+        results = set()
+        results.add(check_neighbour(grid, x1 - 1, y, value)) # left
+        results.add(check_neighbour(grid, x2, y, value)) # right
+        for x in range(x1 - 1, x2 + 1):
+            results.add(check_neighbour(grid, x, y - 1, value)) # row above
+            results.add(check_neighbour(grid, x, y + 1, value)) # row below
+        if True in results:
+            total_p1 += value
 
+#for star, values in stars.items():
+#    print(star, values)
 for gear_ratio_list in stars.values():
     if len(gear_ratio_list) == 2:
         total_p2 += prod(gear_ratio_list)
