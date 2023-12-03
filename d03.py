@@ -18,7 +18,7 @@ def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
             neighbour = grid[y_check][x_check]
             if neighbour == '*':
                 utils.dict_increment(stars, (x_check, y_check), [value])
-            if utils.is_symbol_d3(neighbour):
+            if neighbour != '.' and not neighbour.isdigit():
                 return True # strictly speaking, probably should not return early here and continue to look for '*'. but it worked regardless for the AoC input because any given number borders only one symbol at most
     return False
 
