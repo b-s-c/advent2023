@@ -14,7 +14,7 @@ def check_neighbours(grid:list[str], x:int, y:int, value:int) -> bool:
 
     for x_check in range(min_x, max_x):
         for y_check in range(min_y, max_y):
-            if x_check == y_check: continue
+            if x_check == x and y_check == y: continue
             neighbour = grid[y_check][x_check]
             if neighbour == '*':
                 utils.dict_increment(stars, (x_check, y_check), [value])
