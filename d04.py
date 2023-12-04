@@ -11,8 +11,7 @@ wins = []
 with open("input/04/real.txt") as f:
     for line in f:
         _, game = line.strip().split(":")
-        calls, picks = (set(y) for y in ((x.split()) for x in game.split(" | ")))
-        wins.append(play_card(calls, picks))
+        wins.append(play_card(*(set(y) for y in ((x.split()) for x in game.split(" | ")))))
 
 p2_copies_dict = {}
 for card in range(0, len(wins)):
