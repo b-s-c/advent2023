@@ -37,8 +37,6 @@ for y, line in enumerate(grid):
         if True in results:
             total_p1 += value
 
-#for star, values in stars.items():
-#    print(star, values)
 for gear_ratio_list in stars.values():
     if len(gear_ratio_list) == 2:
         total_p2 += prod(gear_ratio_list)
