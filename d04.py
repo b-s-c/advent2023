@@ -18,6 +18,5 @@ for card in range(0, len(wins)):
     for new_card in range(card + 1, card + 1 + wins[card]):
         utils.dict_increment(p2_card_count, new_card, p2_card_count[card])
 
-p1_total = sum(map(get_winnings, wins))
-print(p1_total)
-print(sum(p2_card_count.values()))
+print(sum(map(get_winnings, wins))) # part 1
+print(sum(p2_card_count.values())) # part 2
