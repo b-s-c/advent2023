@@ -4,18 +4,14 @@ from math import pow
 def get_winnings(num_wins: int) -> int:
     if num_wins == 0: return 0
     return int(pow(2, num_wins - 1))
-def play_card(calls: tuple, picks:tuple) -> int:
-    matches = 0
-    for call in calls:
-        if call in picks:
-            matches += 1
-    return matches
+def play_card(calls: set, picks: set) -> int:
+    return len(calls.intersection(picks))
 
 wins = []
 with open("input/04/real.txt") as f:
     for line in f:
         gameid, game = line.strip().split(":")
-        calls, picks = (tuple(map(int, y)) for y in ((x.split()) for x in game.split(" | ")))
+        calls, picks = (set(map(int, y)) for y in ((x.split()) for x in game.split(" | ")))
         wins.append(play_card(calls, picks))
 
 p2_copies_dict = {}
