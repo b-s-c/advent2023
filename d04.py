@@ -10,8 +10,8 @@ def play_card(calls: set, picks: set) -> int:
 wins = []
 with open("input/04/real.txt") as f:
     for line in f:
-        gameid, game = line.strip().split(":")
-        calls, picks = (set(map(int, y)) for y in ((x.split()) for x in game.split(" | ")))
+        _, game = line.strip().split(":")
+        calls, picks = (set(y) for y in ((x.split()) for x in game.split(" | ")))
         wins.append(play_card(calls, picks))
 
 p2_copies_dict = {}
