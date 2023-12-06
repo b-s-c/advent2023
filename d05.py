@@ -1,4 +1,3 @@
-import copy
 """
 maps: destination range start, source range start, range length
 e.g. 50 98 2
@@ -21,11 +20,6 @@ category_map = { # also the index of these in `maps`
     "humidity-to-location":7,
 }
 
-def is_num_in_x_y(num:int, x:int, y:int) -> bool:
-    if num >= x and num <= y:
-        return True
-    return False
-
 def binary_search(d:dict, v:int) -> int:
     lst_ranges = list(d.keys())
     #print(lst_ranges, v)
@@ -46,78 +40,50 @@ def binary_search(d:dict, v:int) -> int:
         raise("oops")
     return -1
 
+def is_num_in_x_y(num:int, x:int, y:int) -> bool:
+    if num >= x and num <= y:
+        return True
+    return False
+
 def range_intersection(a:tuple, b:tuple, inc=0):
-    # a fits into b (or is the same):
-    # [4, 5] into [1, 10]
-    if a[0] >= b[0] and a[1] <= b[1]:
-        #print("1")
-        return [[], [a[0]+inc, a[1]+inc], []]
-
-    # overlap by 1
-    # [1, 3] into [3, 5] --> [1, 2], [3, 3], [4, 5]
-    if a[1] == b[0]:
-        #print("8")
-        overlap = [a[1], b[0] - 1]
-        start = [a[0], a[1]]
-        end = [b[0] + 1, b[1]]
-        return [start, overlap, end]
-
-    # a is totally out of range of b:
-    # [1, 2] into [5, 6]
-    if a[0] < b[0] and a[1] < b[0]:
-        #print("2")
-        return -5
-    # [5, 6] into [1, 2]
-    if a[0] > b[1]:
-        #print("3")
-        return -5
-
-    # a consumes b
-    # [1, 10] into [3, 4] --> [1, 2], [3, 4], [5, 10]
-    if b[0] >= a[0] and b[1] <= a[1]:
-        #print("7")
-        start = [a[0], b[0] - 1]
-        overlap = [b[0] + inc, b[1] + inc]
-        end = [b[1] + 1, a[1]]
-        return [start, overlap, end]
-
-    # a overlaps into b start
-    # [5,10] into [7, 15] --> [5, 6], [7, 10], [11, 15]
-    if a[0] < b[0] and a[1] >= b[0]:
-        #print("4")
-        overlap = [b[0] + inc, a[1] + inc]
-        start = [a[0], b[0]]
-        end = [a[1], b[1]]
-        return [start, overlap, end]
-
-    # a consumes b
-    # [9,14] into [6,11] --> [6, 8], [9, 11], [12, 14]
-    if a[0] >= b[0] and a[1] >= b[1]:
-        #print("5")
-        overlap = [a[0] + inc, b[1] + inc]
-        start = [b[1], a[0] - 1]
-        end = [b[1] + 1, a[1]]
-        return [start, overlap, end] 
-
-    # a overlaps onto b end
-    # [10,14] into [6,11] --> [6, 9], [10, 11], [12, 14]
-    if a[0] <= b[1] and a[1] > b[1]:
-        #print("6")
-        overlap = [a[0] + inc, b[1] + inc]
-        start = [b[0], a[0] - 1]
-        end = [b[1] + 1, a[1]]
-        return [start, overlap, end]
-
-
-
-
-
-
-
-
-
-    return None
-    return -1
+    print("finding intersect between {} and {}".format(a, b))
+    if a[0] > b[1] or a[1] < b[0]:
+        return -1
+    if a[0] > a[1] or b[0] > b[1]:
+        raise("bad range in {} or {}".format(a, b))
+    left = [-1, -1]
+    intersect = [-1, -1]
+    right = [-1, -1]
+    if is_num_in_x_y(a[0], *b):
+        intersect[0] = a[0]
+        intersect[1] = min(a[1], b[1])
+        if is_num_in_x_y(a[1], *b):
+            return [[], [seed + inc for seed in intersect], []]
+    elif is_num_in_x_y(b[0], *a):
+        intersect[0] = b[0]
+        intersect[1] = min(a[1], b[1])
+    if a[0] < intersect[0]:
+        left = [a[0], intersect[0] - 1]
+    if a[1] > intersect[1]:
+        right = [intersect[1] + 1, a[1]]
+    if a[0] == intersect[0]:
+        left = []
+    if a[1] == intersect[1]:
+        right = []
+    intersect = [seed + inc for seed in intersect]
+    return [left, intersect, right]
+    
+#a = (61, 68)
+#b = (45, 63)
+#a = (55, 68)
+#b = (53, 60)
+#a = (1, 10)
+#b = (10, 15)
+#a = (1, 20)
+#b = (5, 10)
+#inte = range_intersection(a, b)
+#print(inte)
+#exit()
 
 maps = [[] for _ in range(8)]
 with open("input/05/real.txt") as f:
@@ -180,31 +146,31 @@ smallest = maxsize
 new_seed_ranges = []
 for map_dict in ranges[1:]:
     new_seed_ranges = []
-    #print('d', map_dict)
-    #print('sr', seed_ranges)
-    #print('r',ranges)
-    #print("seed ranges count: {}".format(len(seed_ranges)))
+    print('d', map_dict)
+    print('sr', seed_ranges)
+    print('r',ranges)
+    print("seed ranges count: {}".format(len(seed_ranges)))
     for i in range(len(seed_ranges)):
         s_r = seed_ranges[i]
         #map_dict = ranges[1]
         #print(list(map_dict.keys()))
         success = 0
         for map_dict_key in list(map_dict.keys()):
-            #print("[{}, {}] in [{}, {}] for {}".format(s_r[0], s_r[1], map_dict_key[0], map_dict_key[1], map_dict[map_dict_key]))
+            print("[{}, {}] in [{}, {}] for {}".format(s_r[0], s_r[1], map_dict_key[0], map_dict_key[1], map_dict[map_dict_key]))
             result = range_intersection(s_r, map_dict_key, map_dict[map_dict_key])
             if result == -1 or result == -5:
                 pass
             else:
                 success = 1
-                #print(result)
+                print(result)
                 for r in result:
                     if r:
                         new_seed_ranges.append(r)
-            #print()
+            print()
         if not success:
             new_seed_ranges.append(s_r)
     new_seed_ranges=sorted(new_seed_ranges)
     #print("new: {}".format(new_seed_ranges))
     seed_ranges = new_seed_ranges
     #print()
-print(new_seed_ranges[:1])
+print(new_seed_ranges[0])
