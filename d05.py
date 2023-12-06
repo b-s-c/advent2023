@@ -46,7 +46,7 @@ def is_num_in_x_y(num:int, x:int, y:int) -> bool:
     return False
 
 def range_intersection(a:tuple, b:tuple, inc=0):
-    print("finding intersect between {} and {}".format(a, b))
+    #print("finding intersect between {} and {}".format(a, b))
     if a[0] > b[1] or a[1] < b[0]:
         return -1
     if a[0] > a[1] or b[0] > b[1]:
@@ -124,11 +124,11 @@ for i, this_map in enumerate(maps):
     sd_dict = {k: v for k, v in sorted(sd_dict.items(), key=lambda item: item[0][0])}
     ranges.append(sd_dict)
 
-for d in ranges:
-    #print(d)
-    for k, v in d.items():
-        print(k, v)
-    print()
+#for d in ranges:
+#    #print(d)
+#    for k, v in d.items():
+#        print(k, v)
+#    print()
 
 #input()
 
@@ -136,62 +136,27 @@ seed_ranges = []
 for i in range(0, len(maps[0]), 2):
     seed_ranges.append([maps[0][i], maps[0][i] + maps[0][i+1]])
 seed_ranges.sort()
-print(seed_ranges)
-from sys import maxsize
-smallest = maxsize
-#for r in seed_ranges:
-#    print("starting {}".format(r))
-#    for seed in range(*(r)):
-#        value = seed
-#        flag = 0
-#        #print("starting value: {}".format(value))
-#        for stage in range(1, 8):
-#            sd_dict = ranges[stage]
-#            #print(sd_dict)
-#            found = binary_search(sd_dict, value)
-#            if found == -1:
-#                continue
-#            else:
-#                value += found
-#            #print(value)
-#        smallest = min(smallest, value)
-#print(smallest)
 
 for map_dict in ranges[1:]:
-    print('d', map_dict)
-    print('sr', seed_ranges)
-    print('r',ranges)
-    print("seed ranges count: {}".format(len(seed_ranges)))
     unmapped = list(seed_ranges)
     mapped = []
     while unmapped:
         s_r = unmapped.pop()
-        success = False
+        is_mapped = False
         for map_dict_key in list(map_dict.keys()):
-            print(s_r)
-            print("[{}, {}] in [{}, {}] for {}".format(s_r[0], s_r[1], map_dict_key[0], map_dict_key[1], map_dict[map_dict_key]))
+            #print("[{}, {}] in [{}, {}] for {}".format(s_r[0], s_r[1], map_dict_key[0], map_dict_key[1], map_dict[map_dict_key]))
             result = range_intersection(s_r, map_dict_key, map_dict[map_dict_key])
             if result != -1:
-                print(result)
                 mapped.append(result[1])
-                if result[0]:
+                if result[0]: # left remainder
                     unmapped.append(result[0])
-                if result[2]:
+                if result[2]: # right remainder
                     unmapped.append(result[2])
-                success = True
+                is_mapped = True
                 break
-            else:
-                print("{} does not map".format(s_r))
-            print()
-        if success == False:
+        if is_mapped == False: # then this s_r is unimpacted by this group of maps
             mapped.append(s_r)
-        
     seed_ranges = list(mapped)
-    seed_ranges.sort()
-    print("new: {}".format(seed_ranges))
-    print()
-    #input()
+
 seed_ranges.sort()
-print(seed_ranges)
-print(seed_ranges[0])
 print(seed_ranges[0][0])
