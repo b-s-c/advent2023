@@ -73,16 +73,30 @@ def range_intersection(a:tuple, b:tuple, inc=0):
     intersect = [seed + inc for seed in intersect]
     return [left, intersect, right]
     
-#a = (61, 68)
-#b = (45, 63)
-#a = (55, 68)
-#b = (53, 60)
-#a = (1, 10)
-#b = (10, 15)
-#a = (1, 20)
+## a in b
+#a = (2, 5)
+#b = (1, 10)
+#print(range_intersection(a, b))
+## b in a
+#a = (1, 5)
+#b = (2, 3)
+#print(range_intersection(a, b))
+## start a overlap b
+#a = (1, 5)
+#b = (3, 7)
+#print(range_intersection(a, b))
+## end a overlap b
+#a = (5, 10)
+#b = (3, 7)
+#print(range_intersection(a, b))
+## a==b
+#a = (5, 10)
 #b = (5, 10)
-#inte = range_intersection(a, b)
-#print(inte)
+#print(range_intersection(a, b))
+## overlap==
+#a = (5, 10)
+#b = (5, 7)
+#print(range_intersection(a, b))
 #exit()
 
 maps = [[] for _ in range(8)]
@@ -116,15 +130,15 @@ for d in ranges:
         print(k, v)
     print()
 
+#input()
 
 seed_ranges = []
 for i in range(0, len(maps[0]), 2):
-    seed_ranges.append((maps[0][i], maps[0][i] + maps[0][i+1]))
+    seed_ranges.append([maps[0][i], maps[0][i] + maps[0][i+1]])
 seed_ranges.sort()
 print(seed_ranges)
 from sys import maxsize
 smallest = maxsize
-
 #for r in seed_ranges:
 #    print("starting {}".format(r))
 #    for seed in range(*(r)):
@@ -143,34 +157,41 @@ smallest = maxsize
 #        smallest = min(smallest, value)
 #print(smallest)
 
-new_seed_ranges = []
 for map_dict in ranges[1:]:
-    new_seed_ranges = []
     print('d', map_dict)
     print('sr', seed_ranges)
     print('r',ranges)
     print("seed ranges count: {}".format(len(seed_ranges)))
-    for i in range(len(seed_ranges)):
-        s_r = seed_ranges[i]
-        #map_dict = ranges[1]
-        #print(list(map_dict.keys()))
-        success = 0
+    unmapped = list(seed_ranges)
+    mapped = []
+    while unmapped:
+        s_r = unmapped.pop()
+        success = False
         for map_dict_key in list(map_dict.keys()):
+            print(s_r)
             print("[{}, {}] in [{}, {}] for {}".format(s_r[0], s_r[1], map_dict_key[0], map_dict_key[1], map_dict[map_dict_key]))
             result = range_intersection(s_r, map_dict_key, map_dict[map_dict_key])
-            if result == -1 or result == -5:
-                pass
-            else:
-                success = 1
+            if result != -1:
                 print(result)
-                for r in result:
-                    if r:
-                        new_seed_ranges.append(r)
+                mapped.append(result[1])
+                if result[0]:
+                    unmapped.append(result[0])
+                if result[2]:
+                    unmapped.append(result[2])
+                success = True
+                break
+            else:
+                print("{} does not map".format(s_r))
             print()
-        if not success:
-            new_seed_ranges.append(s_r)
-    new_seed_ranges=sorted(new_seed_ranges)
-    #print("new: {}".format(new_seed_ranges))
-    seed_ranges = new_seed_ranges
-    #print()
-print(new_seed_ranges[0])
+        if success == False:
+            mapped.append(s_r)
+        
+    seed_ranges = list(mapped)
+    seed_ranges.sort()
+    print("new: {}".format(seed_ranges))
+    print()
+    #input()
+seed_ranges.sort()
+print(seed_ranges)
+print(seed_ranges[0])
+print(seed_ranges[0][0])
