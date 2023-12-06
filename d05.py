@@ -74,7 +74,7 @@ def range_intersection(a:tuple, b:tuple, inc=0):
 
     # a consumes b
     # [1, 10] into [3, 4] --> [1, 2], [3, 4], [5, 10]
-    if b[0] > a[0] and b[1] < a[1]:
+    if b[0] >= a[0] and b[1] <= a[1]:
         #print("7")
         start = [a[0], b[0] - 1]
         overlap = [b[0] + inc, b[1] + inc]
@@ -92,7 +92,7 @@ def range_intersection(a:tuple, b:tuple, inc=0):
 
     # a consumes b
     # [9,14] into [6,11] --> [6, 8], [9, 11], [12, 14]
-    if a[0] > b[0] and a[1] > b[1]:
+    if a[0] >= b[0] and a[1] >= b[1]:
         #print("5")
         overlap = [a[0] + inc, b[1] + inc]
         start = [b[1], a[0] - 1]
