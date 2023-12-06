@@ -100,7 +100,7 @@ def range_intersection(a:tuple, b:tuple, inc=0):
 #exit()
 
 maps = [[] for _ in range(8)]
-with open("input/05/real.txt") as f:
+with open("input/05/big.txt") as f:
     category = -1
     for line in f:
         line = line.strip()
@@ -157,6 +157,7 @@ for map_dict in ranges[1:]:
         if is_mapped == False: # then this s_r is unimpacted by this group of maps
             mapped.append(s_r)
     seed_ranges = list(mapped)
+    print("processed a layer, now have {} ranges".format(len(seed_ranges)))
 
 seed_ranges.sort()
 print(seed_ranges[0][0])
