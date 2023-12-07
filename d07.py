@@ -23,9 +23,9 @@ def get_hand_type(hand: str) -> int:
     5: one pair        (22345)
     6: high card       (23456)
     """
-    if len(set(hand)) == 1:
-        return 0 # five of a kind
     symbol_dict = {symbol:hand.count(symbol) for symbol in hand if symbol != 'J'}
+    if not symbol_dict:
+        return 0 # five of a kind on 'J'
     if 'J' in hand:
         symbol_dict[max(symbol_dict.items(), key=itemgetter(1))[0]] += list(hand).count('J')
     counts = symbol_dict.values()
