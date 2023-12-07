@@ -3,7 +3,7 @@ from operator import itemgetter
 
 hands = []
 bets = []
-#card_hierarchy = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
+#card_hierarchy = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'] # p1 card hierarchy
 card_hierarchy = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
 card_value_dict = {card:card_hierarchy.index(card) for card in card_hierarchy}
 
@@ -12,8 +12,6 @@ with open("input/07/big.txt") as f:
         hand, bet = line.split()
         hands.append(hand)
         bets.append(int(bet))
-#print(hands, bets)
-#print(len(set(hands)))
 
 def get_hand_type(hand: str) -> int:
     """
@@ -27,10 +25,9 @@ def get_hand_type(hand: str) -> int:
     """
     if len(set(hand)) == 1:
         return 0 # five of a kind
+    symbol_dict = {symbol:hand.count(symbol) for symbol in hand if symbol != 'J'}
     if 'J' in hand:
-        symbol_dict = joker_decision(hand)
-    else:
-        symbol_dict = {symbol:hand.count(symbol) for symbol in hand}
+        symbol_dict[max(symbol_dict.items(), key=itemgetter(1))[0]] += list(hand).count('J')
     counts = symbol_dict.values()
     if 5 in counts:
         return 0 # five of a kind (again)
@@ -45,15 +42,6 @@ def get_hand_type(hand: str) -> int:
             return 4 # two pair
         return 5 # one pair
     return 6 # high card
-
-def joker_decision(hand: str) -> dict:
-    hand = list(hand)
-    j_count = hand.count('J')
-    while 'J' in hand:
-        hand.remove('J')
-    symbol_dict = {symbol:hand.count(symbol) for symbol in hand}
-    symbol_dict[max(symbol_dict.items(), key=itemgetter(1))[0]] += j_count
-    return symbol_dict
 
 def compare_two_hands(hand_1: tuple, hand_2: tuple) -> str:
     for i in range(0, len(hand_1[0])):
