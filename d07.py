@@ -2,7 +2,6 @@ from functools import cmp_to_key
 from operator import itemgetter
 
 hands = []
-bets = []
 #card_hierarchy = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'] # p1 card hierarchy
 card_hierarchy = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
 card_value_dict = {card:card_hierarchy.index(card) for card in card_hierarchy}
@@ -10,8 +9,7 @@ card_value_dict = {card:card_hierarchy.index(card) for card in card_hierarchy}
 with open("input/07/big.txt") as f:
     for line in f:
         hand, bet = line.split()
-        hands.append(hand)
-        bets.append(int(bet))
+        hands.append((hand, int(bet)))
 
 def get_hand_type(hand: str) -> int:
     """
@@ -54,17 +52,13 @@ def compare_two_hands(hand_1: tuple, hand_2: tuple) -> str:
     return 0 # hands are equal
     
 hand_type_counts = [[] for _ in range(7)]
-for i, hand in enumerate(hands):
-    hand_type_counts[get_hand_type(hand)].append((hand, bets[i]))
+for hand in hands:
+    hand_type_counts[get_hand_type(hand[0])].append(hand)
 
 rank = len(hands)
 total_winnings = 0
-for i in range(len(hand_type_counts)):
-    #print("\nCategory {}".format(i))
-    hands = hand_type_counts[i]
-    for hand in sorted(hands, key=cmp_to_key(compare_two_hands)):
+for htc in hand_type_counts:
+    for hand in sorted(htc, key=cmp_to_key(compare_two_hands)):
         total_winnings += rank * hand[1]
-        #print("hand: {}, bet: {}".format(*hand))
-        #print("added {}*{}={}".format(rank, hand[1], rank*hand[1]))
         rank -= 1
 print(total_winnings)
