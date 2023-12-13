@@ -10,7 +10,6 @@ with open("input/12/test.input") as f:
 #for inp in inputs:
 #    print(inp)
 
-@functools.cache
 def check_match(pattern: str, values: list[int]) -> bool:
     patterns = [p for p in pattern.split('.') if p] # ...is not empty
     for i, p in enumerate(patterns):
@@ -35,13 +34,6 @@ def place_hashes(size, count): # thanks https://stackoverflow.com/a/43817007
             p[i] = '#'
         yield p
 
-#print(check_match('#.#.###', [1,1,3]))
-#print(check_match('.#...#....###.', [1,1,3]))
-#print(check_match('.#.###.#.######', [1,3,1,6]))
-#print(check_match('####.#...#...', [4,1,1]))
-#print(check_match('#....######..#####.', [1,6,5]))
-#print(check_match('.###.##....#', [3,2,1]))
-
 p1_count = 0
 for inp in inputs:
     working_count = 0
@@ -65,6 +57,6 @@ print(p1_count)
 
 for i, inp in enumerate(inputs):
     pattern, values = inp
-    pattern = "".join(([pattern] + ['?']) * 5 )
-    values = tuple(list(values) * 5)
+    pattern = (([pattern] + ['?']) * 5)
+    values = list(values) * 5
     inputs[i] = (pattern, values)
